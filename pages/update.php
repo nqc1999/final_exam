@@ -1,3 +1,23 @@
+<?php
+    $id = (int)$_POST["id"];
+    $dsn = "mysql:host=localhost;dbname=productdb;charset=utf8";
+    $user = "productdb_admin";
+    $password = "admin123";
+    
+    // データベース接続オブジェクトを取得
+    $pdo = new PDO($dsn, $user, $password);
+    // 実行するSQLを設定
+    $sql = "select * from product where id = ?";
+    // SQL実行オブジェクトを取得
+    $pstmt = $pdo->prepare($sql);
+    $pstmt->bindValue(1, $id);
+    // SQLを実行
+    $pstmt->execute();
+    $records = $pstmt->fetchAll(PDO::FETCH_ASSOC);
+    $record = $records[0];
+    
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,8 +37,8 @@
 			<tr>
 				<th>商品ID</th>
 				<td>
-					4
-					<input type="hidden" name="id" value="4">
+					<?= $id ?>
+					<input type="hidden" name="id" value="<?= $id ?>">
 				</td>
 			</tr>
 			<tr>
@@ -33,15 +53,15 @@
 			</tr>
 			<tr>
 				<th>商品名</th>
-				<td><input type="text" name="name" value="ランチョンマット"></td>
+				<td><input type="text" name="name" value="<?= $record[name] ?>"></td>
 			</tr>
 			<tr>
 				<th>価格</th>
-				<td><input type="number" name="price" value="900">円</td>
+				<td><input type="number" name="price" value="<?= $record[price] ?>">円</td>
 			</tr>
 			<tr>
 				<th>商品説明</th>
-				<td><textarea name="detail" id="" cols="30" rows="3">お椀やお箸によく似合う、和風のランチョンマットです。</textarea></td>
+				<td><textarea name="detail" id="" cols="30" rows="3"><?= $record[detail] ?></textarea></td>
 			</tr>
 			<tr class="buttons">
 				<td colspan="2">
